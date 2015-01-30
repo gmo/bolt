@@ -1022,9 +1022,9 @@ class Config
         // Ensure left slash on mountpoint
         $mountpoint = '/' . ltrim($mountpoint, '/');
 
-        if (strpos($request->getPathInfo(), '/async') === 0 || $request->isXmlHttpRequest()) {
+        if (strpos($request->getPathInfo(), '/async') !== false || $request->isXmlHttpRequest()) {
             $end = 'async';
-        } elseif (strpos($request->getPathInfo(), $mountpoint) === 0) {
+        } elseif (strpos($request->getPathInfo(), $mountpoint) !== false) {
             $end = 'backend';
         } else {
             $end = 'frontend';
