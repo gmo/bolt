@@ -1219,7 +1219,17 @@ class Storage
             // like 'page/latest/5'
             $decoded['contenttypes'] = $this->decodeContentTypesFromText($match[1]);
             if (!isset($metaParameters['order']) || $metaParameters['order'] === false) {
-                $metaParameters['order'] = 'datepublish ' . ($match[2] == 'latest' ? 'DESC' : 'ASC');
+                $contenttype = $this->getContentType(reset($decoded['contenttypes']));
+                if ($this->isValidColumn($contenttype['sort'], $contenttype, true)) {
+                    list($name, $asc) = $this->getSortOrder($contenttype['sort']);
+                } else {
+                    $name = 'datepublish';
+                    $asc = true;
+                }
+                if ($match[2] === 'latest') {
+                    $asc = !$asc;
+                }
+                $metaParameters['order'] = $name . ' ' . ($asc ? 'ASC' : 'DESC');
             }
             if (!isset($metaParameters['limit'])) {
                 $metaParameters['limit'] = $match[3];
