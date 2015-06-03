@@ -253,9 +253,6 @@ class Application extends Silex\Application
         // Register the toolbar item for our bolt nipple.
         $this->register(new Provider\BoltProfilerServiceProvider());
 
-        // Register the toolbar item for the Twig toolbar item.
-        $this->register(new Provider\TwigProfilerServiceProvider());
-
         $this['twig.loader.filesystem'] = $this->share(
             $this->extend(
                 'twig.loader.filesystem',
@@ -265,16 +262,6 @@ class Application extends Silex\Application
                     return $filesystem;
                 }
             )
-        );
-
-        // PHP 5.3 does not allow 'use ($this)' in closures.
-        $app = $this;
-        $this->after(
-            function () use ($app) {
-                foreach (Lib::parseTwigTemplates($app['twig.loader.filesystem']) as $template) {
-                    $app['twig.logger']->collectTemplateData($template);
-                }
-            }
         );
     }
 
